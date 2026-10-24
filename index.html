@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rango, nucleo, immagine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--paper:#FFFFFF;--grid:#E4EBF5;--ink:#1C2B45;--soft:#5B6B85;--line:#C9D3E2;--rank:#2C55C9;--ker:#1C8457;--pen:#C8322D;--field:#FFFFFF;--hl:#FBE4E2;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#18211E;--grid:#222F29;--ink:#E7ECE4;--soft:#9DAAA2;--line:#3A4A43;--rank:#8EB0FF;--ker:#6CD4A1;--pen:#FF8077;--field:#1F2B27;--hl:#4A2422;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#18211E;--grid:#222F29;--ink:#E7ECE4;--soft:#9DAAA2;--line:#3A4A43;--rank:#8EB0FF;--ker:#6CD4A1;--pen:#FF8077;--field:#1F2B27;--hl:#4A2422;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;color:var(--ink);font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5}
+main{max-width:680px;margin:0 auto;padding:28px 18px 56px}
+.m,h1,h2,.n,.op,.vec,.vg,.mat input,.rr span,.slider label,.val{font-family:"STIX Two Text","Cambria Math",Georgia,"Times New Roman",serif}
+h1{font-weight:500;font-size:clamp(30px,7vw,40px);line-height:1.1;margin:0 0 6px}
+.sub{color:var(--soft);margin:0 0 22px;font-size:15px}
+.thm{border:2px solid var(--pen);border-radius:3px;padding:18px 12px 14px;background:var(--paper);margin:0 0 30px}
+.eq{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:start;text-align:center;gap:0 4px}
+.n{font-size:clamp(46px,14vw,68px);line-height:1;font-weight:500}
+.op{font-size:clamp(32px,9vw,46px);line-height:1.35;color:var(--soft)}
+.l{font-size:13px;color:var(--soft);margin-top:6px;line-height:1.3}
+.dom{color:var(--ink)}.rk{color:var(--rank)}.kr{color:var(--ker)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:center;font-size:14px}
+.tag{border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--paper);color:var(--soft)}
+.tag.yes{border-color:var(--ker);color:var(--ker)}
+.tag.arr{border-color:var(--rank);color:var(--rank)}
+section{margin:0 0 28px}
+h2{font-weight:500;font-size:22px;margin:0 0 10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button{font:inherit;font-size:14px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:6px;padding:7px 12px;cursor:pointer;min-height:38px}
+button:hover{border-color:var(--ink)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--rank);outline-offset:2px}
+.lbl{font-size:13px;color:var(--soft);margin:0 0 6px}
+.mats{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:flex-start}
+.mat{display:inline-grid;gap:6px;padding:8px 10px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:8px;background:var(--paper)}
+.mat input{width:46px;height:40px;text-align:center;font-size:19px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:0;-moz-appearance:textfield;appearance:textfield}
+.mat input::-webkit-inner-spin-button,.mat input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.mat input[readonly]{color:var(--soft);background:transparent;border-style:dashed}
+.bc{border-left:1.5px solid var(--ink);padding-left:8px;margin-left:2px}
+.rr span{display:flex;align-items:center;justify-content:center;width:44px;height:40px;font-size:18px;border-radius:4px}
+.rr span.bc{width:54px}
+.rr .pv{background:var(--hl);color:var(--pen);font-weight:500}
+.status{font-size:15px;margin:14px 0 0;padding:9px 12px;border-left:3px solid var(--ker);background:var(--paper)}
+.status.bad{border-left-color:var(--pen)}
+.note{font-size:13px;color:var(--pen);margin:8px 0 0}
+.note:empty{display:none}
+canvas{display:block;width:100%;height:340px;touch-action:none;background:var(--paper);border:1px solid var(--line);border-radius:6px}
+.hint{font-size:13px;color:var(--soft);text-align:center;margin:6px 0 0}
+.leg{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 16px;font-size:13px;color:var(--soft);margin:6px 0 4px}
+.sw{display:inline-block;width:18px;vertical-align:middle;margin-right:6px}
+.slider{display:flex;align-items:center;gap:12px;margin:12px 0}
+.slider label{font-size:20px;min-width:28px}
+input[type=range]{flex:1;accent-color:var(--pen);min-height:30px}
+.val{font-size:19px;min-width:46px;text-align:right}
+.vecs{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;margin-top:14px}
+.vg{display:flex;align-items:center;gap:8px;font-size:19px}
+.vec{display:inline-flex;flex-direction:column;align-items:center;min-width:50px;padding:2px 10px;border-left:2px solid var(--ink);border-right:2px solid var(--ink);border-radius:8px;font-size:19px;line-height:1.55;background:var(--paper)}
+.vec.red{border-color:var(--pen);color:var(--pen)}
+.vec.grn{border-color:var(--ker);color:var(--ker)}
+</style>
+</head>
+<body>
+<main>
+<h1>Rango, nucleo, immagine</h1>
+<p class="sub">Il sistema <span class="m"><i>A x</i> = <i>b</i></span>, con <i>x</i> in R³</p>
+
+<div class="thm" aria-live="polite">
+  <div class="eq">
+    <div><div class="n dom">3</div><div class="l">dim dominio</div></div>
+    <div class="op">=</div>
+    <div><div class="n rk" id="nRk"></div><div class="l">rango<br>= dim Im</div></div>
+    <div class="op">+</div>
+    <div><div class="n kr" id="nKer"></div><div class="l">dim Ker</div></div>
+  </div>
+  <div class="facts"><span class="tag arr" id="tArr"></span><span class="tag" id="tInj"></span><span class="tag" id="tSur"></span></div>
+</div>
+
+<section>
+  <h2>Costruisci A</h2>
+  <p class="lbl">Righe di A = dim arrivo</p>
+  <div class="row" id="rowsSel"></div>
+  <p class="lbl" style="margin-top:14px">Colonne: pivot o libera</p>
+  <div class="row" id="colSel"></div>
+  <div class="row" style="margin-top:10px"><button id="gen">Altra matrice, stessi pivot</button></div>
+  <p class="note" id="genNote"></p>
+  <p class="lbl" style="margin-top:14px">Esempi 3×3</p>
+  <div class="row" id="presets"></div>
+</section>
+
+<section>
+  <h2>Termine noto</h2>
+  <div class="row" id="modeSel"></div>
+  <div class="row" id="bBtns" style="margin-top:8px"></div>
+  <p class="note" id="bNote"></p>
+</section>
+
+<section>
+  <div class="mats">
+    <div><p class="lbl">[ A | b ]</p><div class="mat" id="mat"></div></div>
+    <div><p class="lbl">Ridotta a scala</p><div class="mat rr" id="rr"></div></div>
+  </div>
+  <div class="status" id="status"></div>
+</section>
+
+<section>
+  <canvas id="cv" aria-label="Disegno in R³ dell’insieme delle soluzioni"></canvas>
+  <div class="leg">
+    <span><span class="sw" style="border-top:3px solid var(--ker)"></span>soluzioni</span>
+    <span><span class="sw" style="border-top:2px dashed var(--ker)"></span>Ker</span>
+    <span><span class="sw" style="height:10px;width:10px;border-radius:50%;background:var(--pen)"></span>punto x</span>
+  </div>
+  <p class="hint">Trascina il disegno per ruotarlo</p>
+  <div id="sl"></div>
+  <div class="vecs" id="vecs"></div>
+</section>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const SUB=['₁','₂','₃'];
+const fmt=v=>{let r=Math.round(v*100)/100;if(Math.abs(r)<1e-9)r=0;return String(r).replace('.',',').replace('-','−')};
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const zeros=(m,n)=>Array.from({length:m},()=>Array(n).fill(0));
+const mul=(X,Y)=>X.map(r=>Y[0].map((_,j)=>r.reduce((s,v,k)=>s+v*Y[k][j],0)));
+function rref(M){const R=M.map(r=>r.slice()),m=R.length,n=R[0].length,piv=[];let r=0;
+for(let c=0;c<n&&r<m;c++){let p=r;for(let i=r;i<m;i++)if(Math.abs(R[i][c])>Math.abs(R[p][c]))p=i;
+if(Math.abs(R[p][c])<1e-9)continue;[R[r],R[p]]=[R[p],R[r]];const d=R[r][c];for(let j=0;j<n;j++)R[r][j]/=d;
+for(let i=0;i<m;i++)if(i!==r){const f=R[i][c];if(f)for(let j=0;j<n;j++)R[i][j]-=f*R[r][j]}piv.push(c);r++}
+for(const row of R)for(let j=0;j<n;j++)if(Math.abs(row[j])<1e-9)row[j]=0;return{R,piv}}
+const rankOf=M=>rref(M).piv.length;
+
+const PRE={"Retta, libera x₃":[[1,2,1],[0,1,-1],[1,3,0]],"Retta, libera x₂":[[1,2,1],[2,4,3],[1,2,2]],"Retta, libera x₁":[[0,1,2],[0,2,5],[0,1,3]],"Piano":[[1,-1,2],[2,-2,4],[-1,1,-2]],"Solo l’origine":[[2,1,0],[1,3,1],[0,1,2]],"Tutto R³":[[0,0,0],[0,0,0],[0,0,0]]};
+const st={m:3,piv:[true,true,false],A:PRE["Retta, libera x₃"].map(r=>r.slice()),b:[0,0,0],hom:true,t:{},yaw:-0.7,pitch:0.38,slKey:''};
+let S=null;
+
+function analyze(){const bb=st.hom?st.A.map(()=>0):st.b;const aug=st.A.map((r,i)=>[...r,bb[i]]);const{R,piv}=rref(aug);
+const pivA=piv.filter(c=>c<3),incons=piv.includes(3),free=[0,1,2].filter(c=>!pivA.includes(c));
+const basis=free.map(f=>{const v=[0,0,0];v[f]=1;pivA.forEach((p,i)=>v[p]=-R[i][f]);return v});
+const xp=[0,0,0];if(!incons)pivA.forEach((p,i)=>xp[p]=R[i][3]);
+return{R,piv,pivA,incons,free,basis,xp,rank:pivA.length,k:free.length,bZero:bb.every(x=>Math.abs(x)<1e-12)}}
+
+function btn(txt,fn){const b=document.createElement('button');b.type='button';b.textContent=txt;b.onclick=fn;return b}
+[1,2,3].forEach(m=>$('rowsSel').appendChild(btn(m===1?'1 riga':m+' righe',()=>setRows(m))));
+[0,1,2].forEach(c=>$('colSel').appendChild(btn('',()=>toggleCol(c))));
+$('gen').onclick=()=>generate();
+Object.keys(PRE).forEach(k=>$('presets').appendChild(btn(k,()=>{st.m=3;st.A=PRE[k].map(r=>r.slice());st.hom=true;st.b=[0,0,0];st.t={};$('genNote').textContent='';$('bNote').textContent='';buildMat();refresh()})));
+$('modeSel').appendChild(btn('b = 0, omogeneo',()=>setMode(true)));
+$('modeSel').appendChild(btn('b ≠ 0, non omogeneo',()=>setMode(false)));
+$('bBtns').appendChild(btn('b nell’immagine',()=>{$('bNote').textContent=bInIm();buildMat();refresh()}));
+$('bBtns').appendChild(btn('b fuori dall’immagine',()=>{$('bNote').textContent=bOutIm();buildMat();refresh()}));
+
+function setRows(m){let P=[0,1,2].filter(c=>st.piv[c]).slice(0,m);st.m=m;st.piv=[0,1,2].map(c=>P.includes(c));st.b=Array(m).fill(0);generate()}
+function toggleCol(c){const np=st.piv.slice();np[c]=!np[c];if(np.filter(Boolean).length>st.m){$('genNote').textContent=`Con ${st.m} ${st.m===1?'riga':'righe'} ci sono al massimo ${st.m} pivot.`;return}st.piv=np;generate()}
+function generate(){$('genNote').textContent='';$('bNote').textContent='';const m=st.m,P=[0,1,2].filter(c=>st.piv[c]);const R=zeros(m,3);
+P.forEach((c,i)=>{R[i][c]=1;for(let j=c+1;j<3;j++)if(!P.includes(j))R[i][j]=ri(-2,2)});
+const L=zeros(m,m),U=zeros(m,m);for(let i=0;i<m;i++){L[i][i]=1;U[i][i]=1;for(let j=0;j<i;j++)L[i][j]=ri(-2,2);for(let j=i+1;j<m;j++)U[i][j]=ri(-1,1)}
+st.A=mul(mul(L,U),R);st.t={};if(st.hom)st.b=Array(m).fill(0);else $('bNote').textContent=bInIm();buildMat();refresh()}
+function setMode(h){st.hom=h;$('bNote').textContent='';if(h)st.b=Array(st.m).fill(0);else $('bNote').textContent=bInIm();buildMat();refresh()}
+function bInIm(){if(rankOf(st.A)===0){st.b=Array(st.m).fill(0);return 'A è nulla: l’immagine contiene solo il vettore nullo.'}
+let b,n=0;do{const x=[ri(-2,2),ri(-2,2),ri(-2,2)];b=st.A.map(r=>r[0]*x[0]+r[1]*x[1]+r[2]*x[2]);n++}while(b.every(v=>v===0)&&n<50);st.b=b;return ''}
+function bOutIm(){const r=rankOf(st.A);if(r===st.m)return 'Rango = dim arrivo: ogni b sta nell’immagine, il sistema è sempre compatibile.';
+bInIm();for(let j=0;j<st.m;j++){const e=Array(st.m).fill(0);e[j]=1;if(rankOf(st.A.map((row,i)=>[...row,e[i]]))>r){st.b=st.b.map((v,i)=>v+(i===j?ri(1,2):0));break}}return ''}
+
+function buildMat(){const mat=$('mat');mat.innerHTML='';mat.style.gridTemplateColumns='repeat(3,46px) 56px';
+for(let i=0;i<st.m;i++)for(let j=0;j<4;j++){const inp=document.createElement('input');inp.type='number';inp.step='any';
+if(j<3){inp.value=st.A[i][j];inp.setAttribute('aria-label',`A riga ${i+1} colonna ${j+1}`);inp.oninput=()=>{const v=parseFloat(String(inp.value).replace(',','.'));st.A[i][j]=isNaN(v)?0:v;refresh()};mat.appendChild(inp)}
+else{const w=document.createElement('div');w.className='bc';inp.setAttribute('aria-label',`b riga ${i+1}`);
+if(st.hom){inp.value=0;inp.readOnly=true}else{inp.value=st.b[i];inp.oninput=()=>{const v=parseFloat(String(inp.value).replace(',','.'));st.b[i]=isNaN(v)?0:v;refresh()}}
+w.appendChild(inp);mat.appendChild(w)}}}
+
+function refresh(){S=analyze();const{rank,k}=S,m=st.m;
+$('nRk').textContent=rank;$('nKer').textContent=k;
+$('tArr').textContent=`dim arrivo ${m}`;
+const ti=$('tInj');ti.textContent=k===0?'iniettiva':'non iniettiva';ti.className='tag'+(k===0?' yes':'');
+const ts=$('tSur');ts.textContent=rank===m?'suriettiva':'non suriettiva';ts.className='tag'+(rank===m?' yes':'');
+[...$('rowsSel').children].forEach((b,i)=>b.setAttribute('aria-pressed',i+1===m));
+st.piv=[0,1,2].map(c=>S.pivA.includes(c));
+[...$('colSel').children].forEach((b,c)=>{b.textContent=`x${SUB[c]} ${st.piv[c]?'pivot':'libera'}`;b.setAttribute('aria-pressed',st.piv[c])});
+[...$('modeSel').children].forEach((b,i)=>b.setAttribute('aria-pressed',i===0?st.hom:!st.hom));
+$('bBtns').style.display=st.hom?'none':'flex';
+const rr=$('rr');rr.innerHTML='';rr.style.gridTemplateColumns='repeat(3,44px) 54px';
+for(let i=0;i<m;i++)for(let j=0;j<4;j++){const s=document.createElement('span');s.textContent=fmt(S.R[i][j]);let c=j===3?'bc':'';if(S.piv[i]===j)c+=' pv';s.className=c.trim();rr.appendChild(s)}
+const obj=['un punto','una retta','un piano','tutto R³'][k],stEl=$('status');stEl.className='status';
+if(st.hom||S.bZero){stEl.textContent=(!st.hom?'b = 0, quindi è il caso omogeneo. ':'')+'Soluzioni = Ker: '+(k===0?'solo l’origine.':k===3?'tutto R³.':obj+' per l’origine.')}
+else if(S.incons){stEl.textContent='Incompatibile: b non sta nell’immagine di A, nessuna soluzione.';stEl.className='status bad'}
+else stEl.textContent=k===0?'Compatibile: una sola soluzione, x = xₚ.':k===3?'Compatibile: tutto R³.':`Compatibile: soluzioni = xₚ + Ker, ${obj} che non passa per l’origine.`;
+const key=S.free.join(',')+(S.incons?'i':'');if(key!==st.slKey){st.slKey=key;buildSliders()}
+update()}
+
+function buildSliders(){const sl=$('sl');sl.innerHTML='';if(S.incons)return;
+S.free.forEach(f=>{if(st.t[f]===undefined)st.t[f]=1;const row=document.createElement('div');row.className='slider';
+const id='s'+f;row.innerHTML=`<label for="${id}"><i>x</i>${SUB[f]}</label><input id="${id}" type="range" min="-3" max="3" step="0.1" value="${st.t[f]}"><span class="val">${fmt(st.t[f])}</span>`;
+const inp=row.querySelector('input'),out=row.querySelector('.val');inp.oninput=()=>{st.t[f]=parseFloat(inp.value);out.textContent=fmt(st.t[f]);update()};sl.appendChild(row)})}
+
+function pointX(){const p=S.xp.slice();S.basis.forEach((b,k)=>{const t=st.t[S.free[k]]??1;for(let i=0;i<3;i++)p[i]+=t*b[i]});return p}
+const col=(v,cls)=>`<div class="vec ${cls||''}">${v.map(x=>`<span>${fmt(x)}</span>`).join('')}</div>`;
+
+function update(){const vecs=$('vecs');let h='';
+if(S.incons)h+=`<div class="vg"><i>x</i> =&nbsp;<span style="color:var(--soft)">nessuna soluzione</span></div>`;
+else{h+=`<div class="vg"><i>x</i> = ${col(pointX(),'red')}</div>`;if(!st.hom&&!S.bZero)h+=`<div class="vg"><i>x</i>ₚ = ${col(S.xp)}</div>`}
+if(S.k>0&&S.k<3)S.basis.forEach((b,i)=>{h+=`<div class="vg"><i>v</i>${SUB[i]} = ${col(b,'grn')}</div>`});
+vecs.innerHTML=h;draw()}
+
+function combos(k){const out=[];for(let s=0;s<(1<<k);s++)out.push([...Array(k)].map((_,i)=>(s>>i&1)?3:-3));return out}
+function draw(){const cv=$('cv'),dpr=window.devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;
+const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
+const cs=getComputedStyle(document.documentElement),V=n=>cs.getPropertyValue(n).trim();
+const soft=V('--soft')||'#888',ker=V('--ker')||'#1C8457',pen=V('--pen')||'#C8322D',line=V('--line')||'#ccc';
+const{basis,xp,k,incons}=S,shift=!st.hom&&!S.bZero&&!incons;
+const comb=(o,ts)=>{const v=o.slice();ts.forEach((t,j)=>{for(let i=0;i<3;i++)v[i]+=t*basis[j][i]});return v};
+let Rw=3;combos(k).forEach(ts=>{Rw=Math.max(Rw,Math.hypot(...comb([0,0,0],ts))*1.05,Math.hypot(...comb(xp,ts))*1.05)});Rw=Math.max(Rw,Math.hypot(...xp)*1.2);
+const s=Math.min(w,h)/2*0.82/Rw,cx=w/2,cy=h/2,a=Math.cos(st.yaw),b=Math.sin(st.yaw),cp=Math.cos(st.pitch),sp=Math.sin(st.pitch);
+const pj=v=>{const x=v[0]*a-v[1]*b,y=v[0]*b+v[1]*a,z=y*sp+v[2]*cp;return[cx+x*s,cy-z*s]};
+const ln=(p,q,color,wd,ds)=>{const A=pj(p),B=pj(q);c.beginPath();c.setLineDash(ds||[]);c.strokeStyle=color;c.lineWidth=wd;c.moveTo(A[0],A[1]);c.lineTo(B[0],B[1]);c.stroke();c.setLineDash([])};
+const quad=(o,fillA,stroke,ds)=>{const q=[[-3,-3],[3,-3],[3,3],[-3,3]].map(t=>pj(comb(o,t)));c.beginPath();c.moveTo(q[0][0],q[0][1]);q.slice(1).forEach(p=>c.lineTo(p[0],p[1]));c.closePath();
+if(fillA){c.globalAlpha=fillA;c.fillStyle=ker;c.fill();c.globalAlpha=1}c.setLineDash(ds||[]);c.strokeStyle=stroke;c.lineWidth=1.2;c.stroke();c.setLineDash([])};
+if(k===2){if(shift||incons)quad([0,0,0],0,ker,[5,4]);if(!incons){const o=shift?xp:[0,0,0];quad(o,0.14,ker);c.globalAlpha=0.45;for(let t=-2;t<=2;t++){ln(comb(o,[t,-3]),comb(o,[t,3]),ker,1);ln(comb(o,[-3,t]),comb(o,[3,t]),ker,1)}c.globalAlpha=1}}
+for(let i=0;i<3;i++){const p=[0,0,0],q=[0,0,0];p[i]=-Rw;q[i]=Rw;ln(p,q,soft,1);const L=[0,0,0];L[i]=Rw*1.09;const t=pj(L);c.fillStyle=soft;c.font='italic 16px "STIX Two Text", Georgia, serif';c.textAlign='center';c.textBaseline='middle';c.fillText('x'+SUB[i],t[0],t[1])}
+if(k===1){const v=basis[0],at=(o,t)=>o.map((x,i)=>x+t*v[i]);if(shift||incons)ln(at([0,0,0],-3.6),at([0,0,0],3.6),ker,1.5,[5,4]);
+if(!incons){const o=shift?xp:[0,0,0];ln(at(o,-3),at(o,3),ker,3);ln(at(o,3),at(o,3.7),ker,1.5,[3,4]);ln(at(o,-3),at(o,-3.7),ker,1.5,[3,4])}}
+const o=pj([0,0,0]);c.fillStyle=soft;c.beginPath();c.arc(o[0],o[1],3.5,0,7);c.fill();
+if(shift){const q=pj(xp);c.strokeStyle=V('--ink')||'#333';c.lineWidth=1.5;c.beginPath();c.arc(q[0],q[1],5,0,7);c.stroke();c.fillStyle=V('--ink');c.font='italic 15px "STIX Two Text", Georgia, serif';c.textAlign='left';c.fillText('xₚ',q[0]+8,q[1]-10)}
+if(!incons){const p=pointX();ln([0,0,0],p,pen,1.5,[5,4]);ln(p,[p[0],p[1],0],line,1,[2,3]);ln([0,0,0],[p[0],p[1],0],line,1,[2,3]);const q=pj(p);c.fillStyle=pen;c.beginPath();c.arc(q[0],q[1],7,0,7);c.fill()}}
+
+let drag=null;const cvs=$('cv');
+cvs.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY,st.yaw,st.pitch];cvs.setPointerCapture(e.pointerId)});
+cvs.addEventListener('pointermove',e=>{if(!drag)return;st.yaw=drag[2]+(e.clientX-drag[0])*0.01;st.pitch=Math.max(-1.5,Math.min(1.5,drag[3]+(e.clientY-drag[1])*0.01));draw()});
+['pointerup','pointercancel'].forEach(ev=>cvs.addEventListener(ev,()=>{drag=null}));
+window.addEventListener('resize',draw);
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw)}catch(e){}
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+buildMat();refresh();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+</script>
+</body>
+</html>
